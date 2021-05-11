@@ -76,7 +76,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     def new_message_object(self, sender, room_name, message_content):
         message = Message()
-        message.sender = sender
+        if sender is not None:
+            message.sender = sender
         message.room_name = room_name
         message.content = message_content
         message.created_at = now()

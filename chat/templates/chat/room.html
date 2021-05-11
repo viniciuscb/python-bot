@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    user: {{ current_user }}<br/>
+    user: {{ current_user }} (id: {{ current_user.id }})<br/>
     room: {{ room_name }}<br/>
     status: <span id="chat-status"></span><br/>
     <div id="chat-log"></div>
