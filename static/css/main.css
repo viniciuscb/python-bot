@@ -1,0 +1,34 @@
+.username {
+    color: blue;
+    margin-right: 6px;
+}
+
+.message_creation_date {
+    color: green;
+    margin-right: 6px;
+}
+
+.message_content {
+
+}
+
+#chat-log {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: #eee;
+    border: 1px solid #aaa;
+    padding: 6px;
+    border-radius: 3px;
+}
+
+#chat-status {
+    font-weight: bold;
+}
+
+.connection-open {
+    color: green;
+}
+
+.connection-closed {
+    color: red;
+}
