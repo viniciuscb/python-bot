@@ -6,6 +6,8 @@ from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.core import serializers
 from django.utils.timezone import now
+from django.conf import settings
+
 
 from chat.models import Message
 
@@ -65,7 +67,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_last_messages(self, room_name):
-        return Message.objects.filter(room_name=room_name).order_by("-created_at")[:3][::-1]
+        # get the first <settings.CHAT_MESSAGES_LIMIT> messages, last to first, then reverses
+        return Message.objects.filter(room_name=room_name).order_by("-created_at")[:settings.CHAT_MESSAGES_LIMIT][::-1]
 
     @database_sync_to_async
     def insert_message(self, message_object):

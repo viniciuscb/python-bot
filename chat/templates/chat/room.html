@@ -12,6 +12,8 @@
 
 {% block script %}
     <script>
+        const messagesLimit = {{ messages_limit }};
+
         const dateFormatOptions = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
 
         const getBrowserLanguage = function () {
@@ -33,17 +35,27 @@
         chatSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
 
+            const chatLogElm = $("#chat-log");
+
             for (message of data) {
                 if (message.model == 'chat.message') {
                     new_message = '<div>';
                     new_message += '<span class="message_creation_date">' + message.fields.created_at + '</span>';
-                    new_message += '<span class="username">' + message.fields.sender + '</span> ';
+                    new_message += '<span class="username">user_id: ' + message.fields.sender + '</span> ';
                     new_message += '<span class="message_content">' + message.fields.content + '</span>';
                     new_message += '</div>'
 
-                    $("#chat-log").append(new_message)
+                    chatLogElm.append(new_message)
                 }
             }
+
+            const children = chatLogElm.children();
+            const childrenOver = children.length - messagesLimit;
+
+            for (var i = 0; i < childrenOver; i++) {
+                children[0].remove();
+            }
+
         };
 
         chatSocket.onopen = function (e) {
@@ -55,6 +67,8 @@
             $('#chat-status').html("Connection is closed. Please reload this page.")
                 .addClass("connection-closed")
                 .removeClass("connection-open");
+            $('#chat-message-input').attr("disabled", true);
+            $('#chat-message-submit').attr("disabled", true);
         };
 
         $('#chat-message-input').focus();
@@ -65,12 +79,15 @@
         })
 
         $('#chat-message-submit').on('click', (e) => {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'message': message
-            }));
-            messageInputDom.value = '';
+            const messageInput = $('#chat-message-input');
+            const message = messageInput.val();
+            if (message.trim() != "") {
+                chatSocket.send(JSON.stringify({
+                    'message': message
+                }));
+            }
+
+            messageInput.val('');
         });
     </script>
 {% endblock script %}
