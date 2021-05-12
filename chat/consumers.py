@@ -1,5 +1,6 @@
 # chat/consumers.py
 import json
+import re
 
 from asgiref.sync import sync_to_async
 from channels.db import database_sync_to_async
@@ -55,8 +56,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
         )
 
-        # Store message in database
-        await self.insert_message(message_object)
+        # Store message in database, unless it is a command to a bot
+        if message[0] != '/':
+            await self.insert_message(message_object)
 
     # Receive message from room group
     async def chat_message(self, event):
