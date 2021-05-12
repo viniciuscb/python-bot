@@ -70,8 +70,10 @@ if __name__ == "__main__":
     # websocket.enableTrace(True)
 
     host = "localhost:8000"
+    authorization_token = input("Authorization token:")
+
     room_name = input("Connect to which room?")
-    extra_headers = {"Authorization": 'Token f5547507530a68151f640be96e5aee03dd3a57d5'}
+    extra_headers = {"Authorization": f"Token {authorization_token}"}
 
     ws = websocket.WebSocketApp(f"ws://{host}/ws/chat/{room_name}/",
                                 on_open=on_open,
